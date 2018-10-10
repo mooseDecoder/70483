@@ -7,6 +7,7 @@ namespace _70483
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+            Console.WriteLine("test");
         }
     }
 }
