@@ -14,7 +14,9 @@ namespace _70483
         static void RunSection1_1()
         {
             //TPL.ParallelInvoke();
-            TPL.ParallelForEach();
+            //TPL.ParallelForEach();
+            //TPL.ParallelFor();
+            TPL.ParallelLoopState();
 
         }
         

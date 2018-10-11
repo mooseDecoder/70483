@@ -37,7 +37,7 @@ namespace _70483._1._1
         {
             var items = Enumerable.Range(0,500);
             //syncronous
-            Console.WriteLine("Parallel.For Syncronous");
+            Console.WriteLine("Parallel.ForEach Syncronous");
             
             foreach(var item in items)
             {
@@ -47,7 +47,7 @@ namespace _70483._1._1
                 }
             }
             //async
-            Console.WriteLine("Parallel.For Async");
+            Console.WriteLine("Parallel.ForEach Async");
             Parallel.ForEach(items, item=>
             {
                 WorkOnItem(item);
@@ -56,7 +56,7 @@ namespace _70483._1._1
 
         }
         static void WorkOnItem(object item)
-        {   if((int)item % 50 == 0)
+        {   if((int)item % 1 == 0)
             {
                 Console.WriteLine("Started working on: {0}", item);
                 Thread.Sleep(100);
@@ -65,8 +65,35 @@ namespace _70483._1._1
             else
             {
                 Thread.Sleep(100);
-            }
-            
+            } 
+        }
+
+        public static void ParallelFor()
+        {
+            var items = Enumerable.Range(0, 500).ToArray();
+            Console.WriteLine("Async ParallelFor");
+            Parallel.For(0, items.Length, i=>
+            {
+                WorkOnItem(items[i]);
+            });
+
+        }
+        public static void ParallelLoopState()
+        {
+            var items = Enumerable.Range(0, 50).ToArray();
+            Console.WriteLine("Async ParallelLoopState - with stop");
+            int counter = 0;
+            ParallelLoopResult result = Parallel.For(0, items.Length, 
+                (int i, ParallelLoopState loopState)=>
+                {
+                    if(i == 25)
+                    {
+                        loopState.Stop();
+                    }
+                    WorkOnItem(items[i]);
+                    counter++;
+                });
+                Console.WriteLine("Number of items: {0}", counter);
         }
     }
 }
