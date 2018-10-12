@@ -16,8 +16,9 @@ namespace _70483
             //TPL.ParallelInvoke();
             //TPL.ParallelForEach();
             //TPL.ParallelFor();
-            TPL.ParallelLoopState();
-
+            //TPL.ParallelLoopState();
+            //TPL.AsParallel();
+            TPL.Tasks();
         }
         
     }

@@ -1,7 +1,9 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using _70483.SupplementalClasses;
 
 namespace _70483._1._1
 {
@@ -95,5 +97,94 @@ namespace _70483._1._1
                 });
                 Console.WriteLine("Number of items: {0}", counter);
         }
+
+       public static void AsParallel()
+       {
+
+           Person [] people = new Person [1000000];
+           
+            for(int i = 0; i<people.Length; i++)
+            {
+                //Console.WriteLine("Starting with i: {0}", i);
+                people[i] = new Person
+                {
+                    Name=Utilities.RandomString(5),
+                    City= Utilities.RandomCity()
+                };
+                //Console.WriteLine("Name: {0} City {1}",people[i].Name, people[i].City );
+                
+            }
+            Array.Sort(people, delegate(Person x, Person y) { return x.Name.CompareTo(y.Name); });
+
+            int count = 0;
+           Console.WriteLine("Syncronous selection");
+           var stopwatch = new Stopwatch();
+           
+           var result = from person in people
+                        where person.City == "Stuttgart"
+                        select person;
+            stopwatch.Start();
+            foreach (var p in result)
+            {
+                count++;
+                //Console.WriteLine("Selected Name: {0}, City {1}", p.Name, p.City);
+            }
+            stopwatch.Stop();
+            Console.WriteLine("Elapsed: {0} for {1} items.", stopwatch.Elapsed, count);
+
+            // Console.WriteLine("Now async selection with AsParallel");
+            // stopwatch = new Stopwatch();
+            // stopwatch.Start();
+            // result = from person in people.AsParallel()
+            //             where person.City == "Miami"
+            //             select person.Name;
+            // stopwatch.Stop();
+            // foreach (var name in result)
+            // {
+            //     Console.WriteLine(name);
+            // }
+            // Console.WriteLine("Elapsed: {0}", stopwatch.ElapsedTicks);
+
+            count = 0;
+            Console.WriteLine("Now async selection with AsParallel + other options");
+            stopwatch = new Stopwatch();
+            
+
+            result = from person in people.AsParallel()
+                        //.WithDegreeOfParallelism(8)
+                        where person.City == "Stuttgart"
+                        select person;
+            stopwatch.Start();
+            // result.ForAll(p=>{
+            //      count++;
+            // });
+            foreach (var p in result)
+            {
+                count++;
+                //Console.WriteLine("Selected Name: {0}, City {1}", p.Name, p.City);
+            }
+            stopwatch.Stop();
+            Console.WriteLine("Elapsed: {0} for {1} items.", stopwatch.Elapsed, count);
+
+
+       } 
+       public static void Tasks()
+       {
+           Task<int> t = Task.Run(()=>{
+
+               return CalculateResult();
+           });
+
+            Console.WriteLine(t.Result);
+            Console.WriteLine("Finished.");
+       }
+       static int CalculateResult()
+       {
+           Console.WriteLine("Work starting");
+           Thread.Sleep(2000);
+           Console.WriteLine("Work Completed.");
+           return 99;
+       }
+
     }
 }
