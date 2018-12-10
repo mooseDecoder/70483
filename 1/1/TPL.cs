@@ -174,17 +174,138 @@ namespace _70483._1._1
 
                return CalculateResult();
            });
-
+            Console.WriteLine("Hello from Tasks Main (not Task.Run");
             Console.WriteLine(t.Result);
             Console.WriteLine("Finished.");
        }
-       static int CalculateResult()
+
+       public static void Tasks2()
+       {
+           Task<int> t = Task.Run(()=>{
+               Console.WriteLine("Task<int> 1");
+               return 1;
+           });
+           Console.WriteLine("?-?-?");
+           Task<int> t2 = Task.Run(()=>{
+               Console.WriteLine("Task<int> 2");
+               return 2;
+           });
+           Console.WriteLine("?-?-?");
+           Task<int> t3 = Task.Run(()=>{
+               Console.WriteLine("Task<int> 3");
+               return 3;
+           });
+           Console.WriteLine("?-?-?");
+
+
+           
+
+       }
+       public static int CalculateResult()
        {
            Console.WriteLine("Work starting");
            Thread.Sleep(2000);
            Console.WriteLine("Work Completed.");
            return 99;
        }
+    public static int CalculateResult(int i)
+       {
+           Console.WriteLine("Work starting: {0}", i);
+           Thread.Sleep(3000);
+           Console.WriteLine("Work Completed: {0}", i);
+           return 99;
+       }
 
+        public static void WaitAll()
+        {
+            Task [] tasks = new Task[10];
+            for (int i = 0; i < 10; i++)
+            {
+                int taskNum = i;
+                tasks[i] = Task.Run(()=>CalculateResult(taskNum));
+            }
+            Task.WaitAll(tasks);
+            Console.WriteLine("Complete!");
+            Console.ReadKey();
+        }
+        public static void Continuation()
+        {
+            Task t = Task.Run(()=> HelloTask());
+            t.ContinueWith((prevTask)=>WorldTask());
+            Console.WriteLine("Done");
+            Console.ReadKey();
+        }
+        
+        static bool tickRunning2 = true;
+        public static void Threads()
+        {
+            Console.WriteLine("Hello from Threads.");
+
+            
+            //bool tickRunning = true;
+            
+            Thread newThread1 = new Thread(()=>{
+
+                Console.WriteLine("HERE IS THREAD 1");
+                while(tickRunning2)
+                {
+                    Console.Write("Tick ... ");
+                    Thread.Sleep(500);
+
+                }
+
+            });
+            
+
+
+            newThread1.Start();
+            Console.WriteLine("?-?-?");
+            Console.WriteLine("Press a key to stop");
+            Console.Read();
+            tickRunning2 = false;
+
+            
+            
+
+        }
+        static void HelloTask()
+        {
+            Thread.Sleep(2000);
+            Console.WriteLine("Hello");
+        }
+        
+        public static void ThreadLocal()
+        {
+            ThreadLocal<int> local = new ThreadLocal<int>(()=>{
+                return 1;
+            });
+
+            Thread newThread1 = new Thread(()=>{
+
+                Console.WriteLine("Thread 1 local: " + local);
+                local.Value++;
+                Console.WriteLine(local);
+                Console.WriteLine("Thread 1 local after incrementing: " + local);
+                
+            });
+            Thread newThread2 = new Thread(()=>{
+
+                Console.WriteLine("Thread 2 local: " + local);
+                local.Value++;
+                Console.WriteLine(local);
+                Console.WriteLine("Thread 2 local after incrementing: " + local);
+                
+            });
+            newThread1.Start();
+            newThread2.Start();
+            
+
+        }
+        static void WorldTask()
+        {
+            Thread.Sleep(2000);
+            Console.WriteLine("World");
+        }
+        
     }
 }

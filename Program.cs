@@ -7,7 +7,7 @@ namespace _70483
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Hello World! From Main");
             RunSection1_1();
 
         }
@@ -18,7 +18,12 @@ namespace _70483
             //TPL.ParallelFor();
             //TPL.ParallelLoopState();
             //TPL.AsParallel();
-            TPL.Tasks();
+            //TPL.Tasks();
+            //TPL.Tasks2();
+            //TPL.WaitAll();
+            //TPL.Continuation();
+            //TPL.Threads();
+            TPL.ThreadLocal();
         }
         
     }
